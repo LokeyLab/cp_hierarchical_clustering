@@ -23,3 +23,8 @@ heatmaps.
 
 - Dendrogram as json
 - Row and column ordering
+
+# TODO:
+
+- [ ] Implement clustering foundation
+- [ ] Implement similarity/distance calculations
