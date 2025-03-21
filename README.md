@@ -27,4 +27,7 @@ heatmaps.
 # TODO:
 
 - [ ] Implement clustering foundation
-- [ ] Implement similarity/distance calculations
+- [x] Implement similarity/distance calculations
+  - Use native vectors instead of ndarray
+  - [x] Implement Distance matrix calculation
+  - [x] Implement Pearson similarity matrix
