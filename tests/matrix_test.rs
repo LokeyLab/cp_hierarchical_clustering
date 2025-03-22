@@ -3,9 +3,9 @@ use polars::prelude::*;
 use rand::Rng;
 
 fn rand_matrix(m: usize, n: usize) -> Vec<Vec<f64>> {
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     (0..m)
-        .map(|_| (0..n).map(|_| rng.gen::<f64>()).collect())
+        .map(|_| (0..n).map(|_| rng.random::<f64>()).collect())
         .collect()
 }
 
