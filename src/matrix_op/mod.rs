@@ -14,11 +14,7 @@ pub enum Metric {
 pub fn calculate_matrix(mat: &[Vec<f64>], metric: Metric) -> Vec<Vec<f64>> {
     let n = mat.len();
 
-    let init_val = match metric {
-        Metric::Pearson => 1.0,
-        Metric::Distance => 0.0,
-    };
-    let mut distances = vec![vec![init_val; n]; n];
+    let mut distances = vec![vec![0.0; n]; n];
 
     let pairwise_scores: Vec<(usize, usize, f64)> = (0..n)
         .into_par_iter()
