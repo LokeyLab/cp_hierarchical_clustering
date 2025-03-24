@@ -11,7 +11,7 @@ pub enum Metric {
     Distance,
 }
 
-pub fn calculate_matrix(mat: &[Vec<f64>], metric: Metric) -> Vec<Vec<f64>> {
+pub fn calculate_matrix(mat: &[Vec<f64>], metric: Metric, dist: bool) -> Vec<Vec<f64>> {
     let n = mat.len();
 
     let mut distances = vec![vec![0.0; n]; n];
@@ -21,7 +21,7 @@ pub fn calculate_matrix(mat: &[Vec<f64>], metric: Metric) -> Vec<Vec<f64>> {
         .flat_map_iter(|i| {
             (i..n).map(move |j| {
                 let score = match metric {
-                    Metric::Pearson => metrics::pearson_r(&mat[i], &mat[j]),
+                    Metric::Pearson => metrics::pearson_r(&mat[i], &mat[j], dist),
                     Metric::Distance => metrics::centered_correlation(&mat[i], &mat[j]),
                 };
 

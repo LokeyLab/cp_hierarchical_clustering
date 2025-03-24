@@ -1,5 +1,4 @@
 use super::operations::*;
-use rayon::prelude::*;
 
 pub(in crate::matrix_op) fn centered_correlation(u: &Vec<f64>, v: &Vec<f64>) -> f64 {
     let umu = mean(u).unwrap();
@@ -16,7 +15,7 @@ pub(in crate::matrix_op) fn centered_correlation(u: &Vec<f64>, v: &Vec<f64>) -> 
     return res;
 }
 
-pub(in crate::matrix_op) fn pearson_r(x: &Vec<f64>, y: &Vec<f64>) -> f64 {
+pub(in crate::matrix_op) fn pearson_r(x: &Vec<f64>, y: &Vec<f64>, distance: bool) -> f64 {
     let n = x.len() as f64;
 
     let sum_x = sum(x).unwrap();
@@ -29,27 +28,12 @@ pub(in crate::matrix_op) fn pearson_r(x: &Vec<f64>, y: &Vec<f64>) -> f64 {
     let numerator = n * sum_xy - sum_x * sum_y;
     let denominator = ((n * sum_x_sq - sum_x.powi(2)) * (n * sum_y_sq - sum_y.powi(2))).sqrt();
 
-    return numerator / denominator;
-}
+    let r = numerator / denominator;
 
-// pub(in crate::matrix_op) fn calculate_dist_matrix(mat: &[Vec<f64>]) -> Vec<Vec<f64>> {
-//     let n = mat.len();
-//
-//     let pairwise_results: Vec<(usize, usize, f64)> = (0..n)
-//         .into_par_iter()
-//         .flat_map_iter(|i| {
-//             (i..n).map(move |j| {
-//                 let dist = centered_correlation(&mat[i], &mat[j]);
-//                 (i, j, dist)
-//             })
-//         })
-//         .collect();
-//
-//     let mut distances = vec![vec![0.0; n]; n];
-//     for (i, j, dist) in pairwise_results {
-//         distances[i][j] = dist;
-//         distances[j][i] = dist;
-//     }
-//
-//     return distances;
-// }
+    let result = match distance {
+        true => 1.0 - r,
+        false => r,
+    };
+
+    return result;
+}
