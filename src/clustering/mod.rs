@@ -1,4 +1,5 @@
 mod linkages;
+use linkages::calc_dist;
 
 pub(in crate::clustering) struct ClusterMap {
     cluster_map: Vec<Vec<usize>>,
@@ -13,5 +14,21 @@ impl ClusterMap {
 
     pub fn get_cluster(&self, cid: usize) -> &Vec<usize> {
         &self.cluster_map[cid]
+    }
+}
+
+pub(in crate::clustering) struct Distances {
+    distances: Vec<Vec<f64>>,
+}
+
+impl Distances {
+    pub fn new(dists: &[Vec<f64>]) -> Self {
+        Distances {
+            distances: dists.to_vec(),
+        }
+    }
+
+    pub fn get_distances(&self, i: usize, j: usize) -> &f64 {
+        &self.distances[i][j]
     }
 }
