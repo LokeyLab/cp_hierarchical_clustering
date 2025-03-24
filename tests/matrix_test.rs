@@ -29,7 +29,7 @@ fn matrix_to_df(mat: &[Vec<f64>]) -> PolarsResult<DataFrame> {
 fn calc_matrix_pearson_test() {
     let matrix = rand_matrix(384, 6000);
 
-    let res = calculate_matrix(&matrix, Metric::Pearson);
+    let res = calculate_matrix(&matrix, Metric::Pearson, false);
 
     assert_eq!(res.len(), 384);
     assert_eq!(res[0].len(), 384);
@@ -41,7 +41,19 @@ fn calc_matrix_pearson_test() {
 fn calc_matrix_dist_test() {
     let matrix = rand_matrix(384, 6000);
 
-    let res = calculate_matrix(&matrix, Metric::Distance);
+    let res = calculate_matrix(&matrix, Metric::Distance, false);
+
+    assert_eq!(res.len(), 384);
+    assert_eq!(res[0].len(), 384);
+
+    println!("{:?}", matrix_to_df(&res).unwrap());
+}
+
+#[test]
+fn calc_matrix_pearson_dist_test() {
+    let matrix = rand_matrix(384, 6000);
+
+    let res = calculate_matrix(&matrix, Metric::Pearson, true);
 
     assert_eq!(res.len(), 384);
     assert_eq!(res[0].len(), 384);
