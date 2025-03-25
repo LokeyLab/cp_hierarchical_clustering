@@ -19,16 +19,22 @@ impl ClusterMap {
 
 pub(in crate::clustering) struct Distances {
     distances: Vec<Vec<f64>>,
+    len: usize,
 }
 
 impl Distances {
     pub fn new(dists: &[Vec<f64>]) -> Self {
         Distances {
             distances: dists.to_vec(),
+            len: dists.len(),
         }
     }
 
     pub fn get_distances(&self, i: usize, j: usize) -> &f64 {
         &self.distances[i][j]
+    }
+
+    pub fn len(&self) -> usize {
+        self.len
     }
 }
