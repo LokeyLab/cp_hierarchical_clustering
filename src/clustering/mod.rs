@@ -1,6 +1,9 @@
+mod agg_clustering;
 mod linkages;
-use linkages::calc_dist;
 
+pub use agg_clustering::hierarchical_clustering;
+
+#[derive(Debug, Clone)]
 pub(in crate::clustering) struct ClusterMap {
     cluster_map: Vec<Vec<usize>>,
 }
@@ -17,6 +20,7 @@ impl ClusterMap {
     }
 }
 
+#[derive(Debug, Clone)]
 pub(in crate::clustering) struct Distances {
     distances: Vec<Vec<f64>>,
     len: usize,
