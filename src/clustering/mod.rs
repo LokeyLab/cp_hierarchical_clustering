@@ -2,6 +2,8 @@ mod agg_clustering;
 mod linkages;
 
 pub use agg_clustering::hierarchical_clustering;
+pub use linkages::LinkageMethod;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone)]
 pub(in crate::clustering) struct ClusterMap {
@@ -17,6 +19,18 @@ impl ClusterMap {
 
     pub fn get_cluster(&self, cid: usize) -> &Vec<usize> {
         &self.cluster_map[cid]
+    }
+
+    pub fn len(&self) -> usize {
+        self.cluster_map.len()
+    }
+
+    pub fn replace_cid_vals(&mut self, cid: usize, values: &[usize]) {
+        self.cluster_map[cid] = values.to_vec();
+    }
+
+    pub fn add_new_cid(&mut self, cid: usize) {
+        self.cluster_map.resize(cid, vec![]);
     }
 }
 
@@ -40,5 +54,34 @@ impl Distances {
 
     pub fn len(&self) -> usize {
         self.len
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ClusterHierarchy {
+    merges: Vec<Merge>,
+}
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+pub struct Merge {
+    cid1: usize,
+    cid2: usize,
+    dist: f64,
+    new_cid: usize,
+}
+
+impl ClusterHierarchy {
+    pub fn new(merges: &[(usize, usize, f64, usize)]) -> Self {
+        ClusterHierarchy {
+            merges: merges
+                .iter()
+                .map(|&(cid1, cid2, dist, new_cid)| Merge {
+                    cid1,
+                    cid2,
+                    dist,
+                    new_cid,
+                })
+                .collect(),
+        }
     }
 }

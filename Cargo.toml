@@ -8,6 +8,7 @@ ndarray = "*"
 rayon = "*"
 rand = "*"
 polars = "*"
+serde = "*"
 
 [profile.test]
 inherits = "release"
