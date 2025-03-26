@@ -4,6 +4,7 @@ use cp_hierarchical_clustering::{
 
 use polars::prelude::*;
 use rand::Rng;
+use rayon::ThreadPoolBuilder;
 
 fn rand_matrix(m: usize, n: usize) -> Vec<Vec<f64>> {
     let mut rng = rand::rng();
@@ -30,6 +31,11 @@ fn matrix_to_df(mat: &[Vec<f64>]) -> PolarsResult<DataFrame> {
 
 #[test]
 fn cluster_test_1() {
+    _ = ThreadPoolBuilder::new()
+        .num_threads(num_cpus::get().saturating_sub(10))
+        .build_global()
+        .unwrap();
+
     let matrix = rand_matrix(6000, 384);
 
     let res = calculate_matrix(&matrix, Metric::Distance, false);

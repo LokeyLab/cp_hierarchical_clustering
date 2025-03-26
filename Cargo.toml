@@ -9,6 +9,7 @@ rayon = "*"
 rand = "*"
 polars = "*"
 serde = "*"
+num_cpus = "*"
 
 [profile.test]
 inherits = "release"
