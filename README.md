@@ -26,8 +26,13 @@ heatmaps.
 
 # TODO:
 
-- [ ] Implement clustering foundation
+- [x] Implement clustering foundation
+  - [x] Implement Agglomerative clustering
 - [x] Implement similarity/distance calculations
   - Use native vectors instead of ndarray
   - [x] Implement Distance matrix calculation
   - [x] Implement Pearson similarity matrix
+- [ ] Implement tree outputs
+  - [ ] Output tree JSON
+  - [ ] Output simple JSON output
+  - [ ] Output leaf orderings
