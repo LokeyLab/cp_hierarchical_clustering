@@ -1,4 +1,4 @@
-use std::{fs::File, io::Write};
+use std::{error::Error, fs::File, io::Write};
 
 use super::ClusterHierarchy;
 
@@ -11,5 +11,9 @@ impl ClusterHierarchy {
         file.write_all(json_str.as_bytes())?;
 
         return Ok(());
+    }
+
+    pub fn to_string(&self) -> Result<String, Box<dyn Error>> {
+        return Ok(serde_json::to_string_pretty(&self.merges).expect("Can't serialize hierarchy!"));
     }
 }
