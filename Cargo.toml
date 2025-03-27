@@ -10,6 +10,7 @@ rand = "*"
 polars = "*"
 serde = "*"
 num_cpus = "*"
+serde_json = "*"
 
 [profile.test]
 inherits = "release"

@@ -1,5 +1,6 @@
 mod agg_clustering;
 mod linkages;
+mod utils;
 
 pub use agg_clustering::hierarchical_clustering;
 pub use linkages::LinkageMethod;
