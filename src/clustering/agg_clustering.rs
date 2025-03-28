@@ -13,7 +13,7 @@ pub fn hierarchical_clustering(
     let dist = Distances::new(dist_mat);
     let n = dist.len();
     if n == 0 {
-        return Ok(ClusterHierarchy::new(&vec![(0, 0, 0.0, 0)]));
+        return Ok(ClusterHierarchy::new(&vec![(0, 0, 0.0, 0)], 0));
     }
 
     let mut cluster_map = ClusterMap::new(n);
@@ -73,5 +73,5 @@ pub fn hierarchical_clustering(
         // eprintln!("active clusters: {:?}", active_clusters);
     }
 
-    return Ok(ClusterHierarchy::new(&merges));
+    return Ok(ClusterHierarchy::new(&merges, n));
 }

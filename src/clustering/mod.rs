@@ -61,6 +61,7 @@ impl Distances {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ClusterHierarchy {
     merges: Vec<Merge>,
+    original_n: usize,
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
@@ -72,7 +73,7 @@ pub struct Merge {
 }
 
 impl ClusterHierarchy {
-    pub fn new(merges: &[(usize, usize, f64, usize)]) -> Self {
+    pub fn new(merges: &[(usize, usize, f64, usize)], n: usize) -> Self {
         ClusterHierarchy {
             merges: merges
                 .iter()
@@ -83,6 +84,11 @@ impl ClusterHierarchy {
                     new_cid,
                 })
                 .collect(),
+            original_n: n,
         }
+    }
+
+    pub fn leaf_size(&self) -> usize {
+        self.original_n
     }
 }
