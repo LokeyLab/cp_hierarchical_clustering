@@ -33,6 +33,6 @@ heatmaps.
   - [x] Implement Distance matrix calculation
   - [x] Implement Pearson similarity matrix
 - [ ] Implement tree outputs
-  - [ ] Output tree JSON
-  - [ ] Output simple JSON output
+  - [x] Output tree JSON
+  - [x] Output simple JSON output
   - [ ] Output leaf orderings
