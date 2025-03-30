@@ -36,16 +36,16 @@ fn cluster_test_1() {
         .build_global()
         .unwrap();
 
-    let matrix = rand_matrix(6000, 384);
+    let matrix = rand_matrix(20, 384);
 
-    let res = calculate_matrix(&matrix, Metric::Distance, false);
+    let res = calculate_matrix(&matrix, Metric::Pearson, true);
 
     // assert_eq!(res.len(), 384);
     // assert_eq!(res[0].len(), 384);
 
     println!("{:?}", matrix_to_df(&res).unwrap());
 
-    let merges = hierarchical_clustering(&res, LinkageMethod::Complete).unwrap();
+    let merges = hierarchical_clustering(&res, LinkageMethod::Average).unwrap();
 
     // _ = merges.simple_save("test.json").unwrap();
     let merge_str = merges.to_json_tree();

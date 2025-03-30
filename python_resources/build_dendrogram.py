@@ -4,6 +4,8 @@ from __future__ import annotations
 import json
 import sys
 
+from matplotlib import pyplot as plt
+
 
 class DendrogramNode:
     def __init__(
@@ -93,12 +95,48 @@ def assign_positions(root: DendrogramNode) -> dict[int, tuple[float, float]]:
     return positions
 
 
+def plot_dendrogram(
+    root: DendrogramNode, positions: dict[int, tuple[float, float]], ax
+) -> None:
+    if root.left is None and root.right is None:
+        return None
+
+    x, y = positions[root.cid]
+    if root.left:
+        xl, yl = positions[root.left.cid]
+
+        ax.plot([x, xl], [y, yl], c="blue")
+        plot_dendrogram(root=root.left, positions=positions, ax=ax)
+    if root.right:
+        xr, yr = positions[root.right.cid]
+
+        ax.plot([x, xr], [y, yr], c="blue")
+        plot_dendrogram(root=root.right, positions=positions, ax=ax)
+
+    if root.left and root.right:
+        xr, yr = positions[root.right.cid]
+        xl, yl = positions[root.left.cid]
+        ax.plot([xl, xr], [yl, yr], c="blue", linestyle="dashed")
+
+    return None
+
+
 def main():
     fp = sys.argv[1]
 
     tree = load_tree(fp)
 
-    print(tree)
+    pos = assign_positions(root=tree)
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+
+    plot_dendrogram(root=tree, positions=pos, ax=ax)
+
+    ax.set_xlabel("distance")
+    ax.set_ylabel("leaf order")
+
+    plt.title("dendrogram")
+    fig.savefig("test.png")
 
 
 if __name__ == "__main__":
