@@ -36,7 +36,7 @@ fn cluster_test_1() {
         .build_global()
         .unwrap();
 
-    let matrix = rand_matrix(20, 384);
+    let matrix = rand_matrix(20, 6000);
 
     let res = calculate_matrix(&matrix, Metric::Pearson, true);
 
@@ -45,7 +45,7 @@ fn cluster_test_1() {
 
     println!("{:?}", matrix_to_df(&res).unwrap());
 
-    let merges = hierarchical_clustering(&res, LinkageMethod::Average).unwrap();
+    let merges = hierarchical_clustering(&res, LinkageMethod::Complete).unwrap();
 
     // _ = merges.simple_save("test.json").unwrap();
     let merge_str = merges.to_json_tree();

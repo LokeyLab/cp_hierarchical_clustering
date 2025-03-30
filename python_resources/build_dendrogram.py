@@ -113,11 +113,11 @@ def plot_dendrogram(
         ax.plot([x, xr], [y, yr], c="blue")
         plot_dendrogram(root=root.right, positions=positions, ax=ax)
 
-    if root.left and root.right:
-        xr, yr = positions[root.right.cid]
-        xl, yl = positions[root.left.cid]
-        ax.plot([xl, xr], [yl, yr], c="blue", linestyle="dashed")
-
+    # if root.left and root.right:
+    #     xr, yr = positions[root.right.cid]
+    #     xl, yl = positions[root.left.cid]
+    #     ax.plot([xl, xr], [yl, yr], c="blue", linestyle="dashed")
+    #
     return None
 
 
