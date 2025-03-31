@@ -2,9 +2,10 @@ use std::{collections::HashMap, error::Error, fs::File, io::Write};
 
 use serde::{Deserialize, Serialize};
 
-use super::{ClusterHierarchy, Distances};
+use super::ClusterHierarchy;
 
 impl ClusterHierarchy {
+    /// This saves the raw merge list as a json file. No trees are involved here
     pub fn simple_save(&self, filename: &str) -> std::io::Result<()> {
         let json_str =
             serde_json::to_string_pretty(&self.merges).expect("Can't serialize hierarchy!");
@@ -15,10 +16,20 @@ impl ClusterHierarchy {
         return Ok(());
     }
 
+    /// returns the merge list as a json formatted string
     pub fn to_string(&self) -> Result<String, Box<dyn Error>> {
         return Ok(serde_json::to_string_pretty(&self.merges).expect("Can't serialize hierarchy!"));
     }
 
+    /// Returns the cluster outputin json tree form
+    ///
+    /// In json tree form, nodes are described as the following Node:
+    ///
+    /// - DendrogramNode:
+    ///     - cid: cluster id as a usize var
+    ///     - dist: the distance between 2 nodes as a f64 float
+    ///     - left: the Left child as a DendrogramNode or None if it is a leaf
+    ///     - right: the Right child as a DendrogramNode or None if it is a leaf
     pub fn to_json_tree(&self) -> String {
         let root = build_tree(&self);
         let json_str = serde_json::to_string_pretty(&root).expect("Couldn't build json tree!");
@@ -26,6 +37,7 @@ impl ClusterHierarchy {
         return json_str;
     }
 
+    /// Writes the json tree to a file
     pub fn write_tree(&self, fname: &str) -> std::io::Result<()> {
         let json_str = self.to_json_tree();
 
@@ -33,6 +45,12 @@ impl ClusterHierarchy {
         file.write_all(json_str.as_bytes())?;
 
         return Ok(());
+    }
+
+    /// Returns the leaf ordering which can be used to reorder heatmaps
+    pub fn leaf_ordering(&self) -> Vec<usize> {
+        let tree = build_tree(&self);
+        return get_leaf_order(&tree);
     }
 }
 
@@ -98,4 +116,22 @@ fn build_tree(cluster: &ClusterHierarchy) -> DendrogramNode {
     let root = cluster.merges.last().unwrap().new_cid;
     let root_node = nodes.remove(&root).expect("Can't find root node");
     return root_node;
+}
+
+/// Grabs Tree Leaf ordering
+fn get_leaf_order(root: &DendrogramNode) -> Vec<usize> {
+    if root.left.is_none() && root.right.is_none() {
+        return vec![root.cid];
+    }
+
+    let mut orders: Vec<usize> = Vec::new();
+
+    if let Some(ref left) = root.left {
+        orders.extend(get_leaf_order(left));
+    }
+    if let Some(ref right) = root.right {
+        orders.extend(get_leaf_order(right));
+    }
+
+    return orders;
 }

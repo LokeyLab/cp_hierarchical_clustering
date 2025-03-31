@@ -58,12 +58,14 @@ impl Distances {
     }
 }
 
+/// Output for Agglomerative clustering
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ClusterHierarchy {
     merges: Vec<Merge>,
     original_n: usize,
 }
 
+/// Struct to represent merges
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub struct Merge {
     cid1: usize,
@@ -88,6 +90,7 @@ impl ClusterHierarchy {
         }
     }
 
+    /// gives original input items
     pub fn leaf_size(&self) -> usize {
         self.original_n
     }

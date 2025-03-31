@@ -24,6 +24,16 @@ heatmaps.
 - Dendrogram as json
 - Row and column ordering
 
+## main function:
+
+`create_hierarchy(
+    raw_data: &[Vec<f64>],
+    mat_metric: Metric,
+    link_method: LinkageMethod,
+) -> Result<ClusterHierarchy, Box<dyn Error>>`
+
+- This function takes a `&[Vec<f64>]` and creates a `ClusterHierarchy` struct that stores the clustering output.
+
 # TODO:
 
 - [x] Implement clustering foundation
@@ -32,7 +42,7 @@ heatmaps.
   - Use native vectors instead of ndarray
   - [x] Implement Distance matrix calculation
   - [x] Implement Pearson similarity matrix
-- [ ] Implement tree outputs
+- [x] Implement tree outputs
   - [x] Output tree JSON
   - [x] Output simple JSON output
-  - [ ] Output leaf orderings
+  - [x] Output leaf orderings

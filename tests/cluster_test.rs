@@ -48,8 +48,8 @@ fn cluster_test_1() {
     let merges = hierarchical_clustering(&res, LinkageMethod::Complete).unwrap();
 
     // _ = merges.simple_save("test.json").unwrap();
-    let merge_str = merges.to_json_tree();
-    println!("{}", merge_str);
+    // let merge_str = merges.to_json_tree();
+    println!("{:?}", merges.leaf_ordering());
 
     merges.write_tree("tree.json").expect("cant write json");
 }
