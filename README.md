@@ -26,13 +26,26 @@ heatmaps.
 
 ## main function:
 
-`create_hierarchy(
+```
+create_hierarchy(
     raw_data: &[Vec<f64>],
     mat_metric: Metric,
     link_method: LinkageMethod,
-) -> Result<ClusterHierarchy, Box<dyn Error>>`
+) -> Result<ClusterHierarchy, Box<dyn Error>>
+```
 
 - This function takes a `&[Vec<f64>]` and creates a `ClusterHierarchy` struct that stores the clustering output.
+
+```
+create_hierarchy_from_df(
+    df: &DataFrame,
+    mat_metric: Metric,
+    link_method: LinkageMethod,
+    ignore_cols: &Option<Vec<usize>>,
+) -> Result<ClusterHierarchy, Box<dyn Error>> {
+```
+
+- This is the same main function except it converts a polars dataframe into a hierarchy
 
 # TODO:
 
