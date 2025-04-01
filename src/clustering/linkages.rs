@@ -1,8 +1,10 @@
 use core::f64;
 
+use serde::{Deserialize, Serialize};
+
 use crate::clustering::{ClusterMap, Distances};
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub enum LinkageMethod {
     Single,
     Complete,

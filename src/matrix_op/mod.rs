@@ -1,11 +1,12 @@
 use std::usize;
 
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
+use serde::{Deserialize, Serialize};
 
 mod metrics;
 mod operations;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Serialize, Deserialize)]
 pub enum Metric {
     Pearson,
     Distance,
