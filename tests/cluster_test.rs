@@ -1,5 +1,5 @@
 use cp_hierarchical_clustering::{
-    calculate_matrix, hierarchical_clustering, LinkageMethod, Metric,
+    calculate_matrix, create_hierarchy_from_df, hierarchical_clustering, LinkageMethod, Metric,
 };
 
 use polars::prelude::*;
@@ -30,7 +30,7 @@ fn matrix_to_df(mat: &[Vec<f64>]) -> PolarsResult<DataFrame> {
 }
 
 #[test]
-fn cluster_test_1() {
+fn cluster_test() {
     _ = ThreadPoolBuilder::new()
         .num_threads(num_cpus::get().saturating_sub(10))
         .build_global()
@@ -43,7 +43,7 @@ fn cluster_test_1() {
     // assert_eq!(res.len(), 384);
     // assert_eq!(res[0].len(), 384);
 
-    println!("{:?}", matrix_to_df(&res).unwrap());
+    // println!("{:?}", matrix_to_df(&res).unwrap());
 
     let merges = hierarchical_clustering(&res, LinkageMethod::Complete).unwrap();
 
@@ -51,5 +51,37 @@ fn cluster_test_1() {
     // let merge_str = merges.to_json_tree();
     println!("{:?}", merges.leaf_ordering());
 
-    merges.write_tree("tree.json").expect("cant write json");
+    // merges.write_tree("tree.json").expect("cant write json");
+}
+
+#[test]
+fn cluster_test_ignore_cols() {
+    // _ = ThreadPoolBuilder::new()
+    //     .num_threads(num_cpus::get().saturating_sub(10))
+    //     .build_global()
+    //     .unwrap();
+
+    let matrix = rand_matrix(384, 6000);
+    let df = matrix_to_df(&matrix).unwrap();
+
+    let ignore_cols: Option<Vec<usize>> = Some(vec![0, 5, 3, 8]);
+
+    let res = create_hierarchy_from_df(&df, Metric::Pearson, LinkageMethod::Complete, &ignore_cols)
+        .unwrap();
+    println!("{:?}", res.leaf_ordering());
+}
+
+#[test]
+fn cluster_test_df() {
+    // _ = ThreadPoolBuilder::new()
+    //     .num_threads(num_cpus::get().saturating_sub(10))
+    //     .build_global()
+    //     .unwrap();
+
+    let matrix = rand_matrix(384, 6000);
+    let df = matrix_to_df(&matrix).unwrap();
+
+    let res =
+        create_hierarchy_from_df(&df, Metric::Pearson, LinkageMethod::Complete, &None).unwrap();
+    println!("{:?}", res.leaf_ordering());
 }
