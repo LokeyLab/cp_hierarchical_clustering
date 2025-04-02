@@ -85,3 +85,23 @@ fn cluster_test_df() {
         create_hierarchy_from_df(&df, Metric::Pearson, LinkageMethod::Complete, &None).unwrap();
     println!("{:?}", res.leaf_ordering());
 }
+
+#[test]
+fn cluster_test_cluster_struct() {
+    // _ = ThreadPoolBuilder::new()
+    //     .num_threads(num_cpus::get().saturating_sub(10))
+    //     .build_global()
+    //     .unwrap();
+
+    let matrix = rand_matrix(384, 6000);
+    let df = matrix_to_df(&matrix).unwrap();
+
+    let res =
+        create_hierarchy_from_df(&df, Metric::Pearson, LinkageMethod::Complete, &None).unwrap();
+
+    println!("{:?}", res.leaf_ordering());
+
+    // _ = res.write_tree("tree.json");
+
+    println!("{:?}", res.get_raw_nodes().unwrap());
+}

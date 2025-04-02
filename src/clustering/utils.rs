@@ -2,9 +2,38 @@ use std::{collections::HashMap, error::Error, fs::File, io::Write};
 
 use serde::{Deserialize, Serialize};
 
-use super::ClusterHierarchy;
+use super::{ClusterHierarchy, Merge};
 
 impl ClusterHierarchy {
+    pub(in crate::clustering) fn new(merges: &[(usize, usize, f64, usize)], n: usize) -> Self {
+        let merge_vec: Vec<Merge> = merges
+            .iter()
+            .map(|&(cid1, cid2, dist, new_cid)| Merge {
+                cid1,
+                cid2,
+                dist,
+                new_cid,
+            })
+            .collect();
+
+        let mut cluster = ClusterHierarchy {
+            merges: merge_vec,
+            original_n: n,
+            tree: None,
+        };
+
+        let tree = build_tree(&cluster);
+
+        cluster.tree = Some(tree);
+
+        return cluster;
+    }
+
+    /// gives original input items
+    pub fn leaf_size(&self) -> usize {
+        self.original_n
+    }
+
     /// This saves the raw merge list as a json file. No trees are involved here
     pub fn simple_save(&self, filename: &str) -> std::io::Result<()> {
         let json_str =
@@ -17,7 +46,7 @@ impl ClusterHierarchy {
     }
 
     /// returns the merge list as a json formatted string
-    pub fn to_string(&self) -> Result<String, Box<dyn Error>> {
+    pub fn to_string(&self) -> Result<String, serde_json::Error> {
         return Ok(serde_json::to_string_pretty(&self.merges).expect("Can't serialize hierarchy!"));
     }
 
@@ -30,33 +59,48 @@ impl ClusterHierarchy {
     ///     - dist: the distance between 2 nodes as a f64 float
     ///     - left: the Left child as a DendrogramNode or None if it is a leaf
     ///     - right: the Right child as a DendrogramNode or None if it is a leaf
-    pub fn to_json_tree(&self) -> String {
-        let root = build_tree(&self);
-        let json_str = serde_json::to_string_pretty(&root).expect("Couldn't build json tree!");
+    pub fn to_json_tree(&self) -> Result<String, Box<dyn Error>> {
+        if let Some(ref root) = &self.tree {
+            let json_str = serde_json::to_string_pretty(&root).expect("Couldn't build json tree!");
 
-        return json_str;
+            return Ok(json_str);
+        } else {
+            return Err("No Tree found!".into());
+        }
     }
 
     /// Writes the json tree to a file
-    pub fn write_tree(&self, fname: &str) -> std::io::Result<()> {
+    pub fn write_tree(&self, fname: &str) -> Result<(), Box<dyn Error>> {
         let json_str = self.to_json_tree();
 
-        let mut file = File::create(fname)?;
-        file.write_all(json_str.as_bytes())?;
+        if let Ok(json) = json_str {
+            let mut file = File::create(fname)?;
+            file.write_all(json.as_bytes())?;
 
-        return Ok(());
+            return Ok(());
+        }
+
+        return Err("Couldn't retrieve json tree".into());
     }
 
     /// Returns the leaf ordering which can be used to reorder heatmaps
     pub fn leaf_ordering(&self) -> Vec<usize> {
-        let tree = build_tree(&self);
-        return get_leaf_order(&tree);
+        if let Some(ref tree) = &self.tree {
+            return get_leaf_order(&tree);
+        } else {
+            return vec![];
+        }
+    }
+
+    /// Returns a copy of the Dendrogram nodes
+    pub fn get_raw_nodes(&self) -> Option<DendrogramNode> {
+        self.tree.clone()
     }
 }
 
 /// Dendrogram node
 #[derive(Debug, Serialize, Deserialize, Clone)]
-pub(in crate::clustering) struct DendrogramNode {
+pub struct DendrogramNode {
     cid: usize,
     distance: f64,
     left: Option<Box<DendrogramNode>>,
@@ -64,7 +108,7 @@ pub(in crate::clustering) struct DendrogramNode {
 }
 
 impl DendrogramNode {
-    pub fn new(
+    pub(in crate::clustering) fn new(
         cid: usize,
         dist: f64,
         left: Option<Box<DendrogramNode>>,
@@ -80,7 +124,7 @@ impl DendrogramNode {
 }
 
 /// Builds a dendrogram tree
-fn build_tree(cluster: &ClusterHierarchy) -> DendrogramNode {
+pub(in crate::clustering) fn build_tree(cluster: &ClusterHierarchy) -> DendrogramNode {
     // We know that the last item in merge list is the root
     // We also know that the first n items are leaves
     let mut nodes: HashMap<usize, DendrogramNode> = HashMap::new();

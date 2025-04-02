@@ -5,6 +5,7 @@ mod utils;
 pub use agg_clustering::hierarchical_clustering;
 pub use linkages::LinkageMethod;
 use serde::{Deserialize, Serialize};
+use utils::DendrogramNode;
 
 #[derive(Debug, Clone)]
 pub(in crate::clustering) struct ClusterMap {
@@ -63,6 +64,7 @@ impl Distances {
 pub struct ClusterHierarchy {
     merges: Vec<Merge>,
     original_n: usize,
+    tree: Option<DendrogramNode>,
 }
 
 /// Struct to represent merges
@@ -72,26 +74,4 @@ pub struct Merge {
     cid2: usize,
     dist: f64,
     new_cid: usize,
-}
-
-impl ClusterHierarchy {
-    pub fn new(merges: &[(usize, usize, f64, usize)], n: usize) -> Self {
-        ClusterHierarchy {
-            merges: merges
-                .iter()
-                .map(|&(cid1, cid2, dist, new_cid)| Merge {
-                    cid1,
-                    cid2,
-                    dist,
-                    new_cid,
-                })
-                .collect(),
-            original_n: n,
-        }
-    }
-
-    /// gives original input items
-    pub fn leaf_size(&self) -> usize {
-        self.original_n
-    }
 }
