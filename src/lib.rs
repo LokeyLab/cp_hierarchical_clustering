@@ -4,6 +4,7 @@ mod matrix_op;
 use polars::prelude::*;
 use std::error::Error;
 
+pub use clustering::DendrogramNode;
 pub use clustering::{hierarchical_clustering, ClusterHierarchy, LinkageMethod};
 pub use matrix_op::{calculate_matrix, Metric};
 

@@ -5,7 +5,7 @@ mod utils;
 pub use agg_clustering::hierarchical_clustering;
 pub use linkages::LinkageMethod;
 use serde::{Deserialize, Serialize};
-use utils::DendrogramNode;
+pub use utils::DendrogramNode;
 
 #[derive(Debug, Clone)]
 pub(in crate::clustering) struct ClusterMap {
