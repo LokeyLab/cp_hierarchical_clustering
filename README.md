@@ -47,6 +47,10 @@ create_hierarchy_from_df(
 
 - This is the same main function except it converts a polars dataframe into a hierarchy
 
+## Documentation
+
+Run `cargo doc --open`
+
 # TODO:
 
 - [x] Implement clustering foundation
