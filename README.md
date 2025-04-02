@@ -59,3 +59,4 @@ create_hierarchy_from_df(
   - [x] Output tree JSON
   - [x] Output simple JSON output
   - [x] Output leaf orderings
+  - [ ] Output dendrogram nodes themselves
