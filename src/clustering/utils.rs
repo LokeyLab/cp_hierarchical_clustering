@@ -98,13 +98,13 @@ impl ClusterHierarchy {
     }
 }
 
-/// Dendrogram node
+/// A node used to represent the dendrogram tree
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct DendrogramNode {
-    cid: usize,
-    distance: f64,
-    left: Option<Box<DendrogramNode>>,
-    right: Option<Box<DendrogramNode>>,
+    pub cid: usize,
+    pub distance: f64,
+    pub left: Option<Box<DendrogramNode>>,
+    pub right: Option<Box<DendrogramNode>>,
 }
 
 impl DendrogramNode {
